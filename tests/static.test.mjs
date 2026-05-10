@@ -26,8 +26,8 @@ await test('Railway entrypoints are present', async () => {
 await test('document has production-ready metadata and landmarks', () => {
   assert.match(html, /^<!doctype html>/i);
   assert.match(html, /<html lang="de">/);
-  assert.match(html, /<meta name="viewport" content="width=device-width,initial-scale=1" \/>/);
-  assert.match(html, /<meta name="description" content="[^"]{80,}" \/>/);
+  assert.match(html, /<meta\b[^>]*\bname="viewport"[^>]*\bcontent="width=device-width,initial-scale=1"[^>]*\/?>/);
+  assert.match(html, /<meta\b[^>]*\bname="description"[^>]*\bcontent="[^"]{80,}"[^>]*\/?>/);
   assert.match(html, /<main>/);
   assert.match(html, /<footer>/);
   assert.doesNotMatch(html, /TODO|Platzhalter/);
