@@ -65,7 +65,14 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  const url = new URL(req.url, `http://${req.headers.host ?? 'localhost'}`);
+  let url;
+
+  try {
+    url = new URL(req.url, 'http://localhost');
+  } catch {
+    send(res, 400, 'Bad Request', { 'Content-Type': 'text/plain; charset=utf-8' });
+    return;
+  }
 
   if (url.pathname === '/healthz') {
     send(res, 200, req.method === 'HEAD' ? '' : 'ok', {
