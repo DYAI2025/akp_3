@@ -706,11 +706,12 @@
     padding:18px 0;border-bottom:1px solid var(--rule);
     font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;
   }
-  .kontakt form .file button{
+  .kontakt form .file input{
+    width:auto; max-width:320px;
     border:1px solid var(--rule);padding:8px 14px;
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink);text-transform:uppercase;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--ink);text-transform:none;
   }
-  .kontakt form .file button:hover{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+  .kontakt form .file input:focus{border-color:var(--accent)}
   .kontakt form .privacy{
     grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;
     padding:18px 0;font-size:12px;color:var(--muted);line-height:1.5;
@@ -1312,7 +1313,7 @@
         </dl>
       </aside>
 
-      <form data-cta="anfrage" novalidate>
+      <form data-cta="anfrage">
         <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" required /></div>
         <div class="field"><label for="f-mail">E-Mail</label><input id="f-mail" name="mail" type="email" required /></div>
         <div class="field"><label for="f-tel">Telefon · optional</label><input id="f-tel" name="tel" type="tel" /></div>
@@ -1347,13 +1348,12 @@
         <div class="field full"><label for="f-budget">Budgetrahmen · optional</label><input id="f-budget" name="budget" type="text" placeholder="z. B. 1,2 – 2,4 Mio. EUR" /></div>
         <div class="field full"><label for="f-msg">Nachricht</label><textarea id="f-msg" name="msg" rows="5" placeholder="Beschreiben Sie kurz die Bauaufgabe, den Ort und den Zeithorizont."></textarea></div>
         <div class="file">
-          <span>Datei-Upload · optional (Plan, Skizze, Foto)</span>
-          <button type="button">Datei wählen</button>
+          <label for="f-file">Datei-Upload · optional (Plan, Skizze, Foto)</label>
+          <input id="f-file" name="file" type="file" accept="image/*,.pdf" />
         </div>
-        <!-- TODO: Datenschutztext rechtlich prüfen und ergänzen. -->
         <label class="privacy">
-          <input type="checkbox" required />
-          <span>Datenschutzbestätigung — Platzhalter. Der Datenschutztext wird vor Veröffentlichung rechtlich geprüft und ergänzt.</span>
+          <input type="checkbox" name="privacy" required />
+          <span>Ich stimme zu, dass meine Angaben zur Bearbeitung der Projektanfrage per E-Mail verarbeitet werden. Diese Website speichert die Formulardaten nicht serverseitig.</span>
         </label>
         <div class="submit"><button type="submit" data-cta="anfrage">Anfrage senden →</button></div>
       </form>
@@ -1426,15 +1426,25 @@
   const filters = document.getElementById('filters');
   const projects = document.getElementById('projects');
   if(filters && projects){
+    const filterButtons = [...filters.querySelectorAll('button[data-f]')];
+    filterButtons.forEach((button) => {
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', button.classList.contains('active') ? 'true' : 'false');
+    });
+
     filters.addEventListener('click', (e)=>{
       const btn = e.target.closest('button[data-f]');
       if(!btn) return;
-      [...filters.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b===btn));
+      filterButtons.forEach(b => {
+        const active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
       const f = btn.dataset.f;
       [...projects.children].forEach(card => {
         const tags = (card.dataset.tags||'').split(' ');
         const show = f === 'all' || tags.includes(f);
-        card.style.display = show ? '' : 'none';
+        card.hidden = !show;
       });
     });
   }
@@ -1444,15 +1454,16 @@
   let cx = 0, cy = 0, tx = 0, ty = 0;
   function moveCursor(e){
     tx = e.clientX; ty = e.clientY;
-    cursor.classList.add('visible');
+    cursor?.classList.add('visible');
   }
   function loop(){
+    if(!cursor) return;
     cx = lerp(cx, tx, 0.22);
     cy = lerp(cy, ty, 0.22);
     cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
     requestAnimationFrame(loop);
   }
-  if(matchMedia('(hover:hover)').matches){
+  if(cursor && window.matchMedia('(hover:hover)').matches){
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseleave', ()=> cursor.classList.remove('visible'));
     loop();
@@ -1464,35 +1475,62 @@
       el.addEventListener('mouseenter', ()=> cursor.classList.add('hover-cta'));
       el.addEventListener('mouseleave', ()=> cursor.classList.remove('hover-cta'));
     });
-  } else {
+  } else if(cursor) {
     cursor.style.display = 'none';
   }
 
   // ---------- SCROLL REVEAL ----------
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(en => {
-      if(en.isIntersecting){
-        en.target.style.opacity = 1;
-        en.target.style.transform = 'translateY(0)';
-        io.unobserve(en.target);
-      }
+  const revealTargets = document.querySelectorAll('main section .project-card, main section .competence-matrix article, main section .timeline .t, main section .pubs .group, main section .netz-grid details');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en => {
+        if(en.isIntersecting){
+          en.target.style.opacity = 1;
+          en.target.style.transform = 'translateY(0)';
+          io.unobserve(en.target);
+        }
+      });
+    }, {threshold: 0.08});
+    revealTargets.forEach(el=>{
+      el.style.opacity = 0;
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity .7s ease, transform .7s ease';
+      io.observe(el);
     });
-  }, {threshold: 0.08});
-  document.querySelectorAll('main section .project-card, main section .competence-matrix article, main section .timeline .t, main section .pubs .group, main section .netz-grid details').forEach(el=>{
-    el.style.opacity = 0;
-    el.style.transform = 'translateY(18px)';
-    el.style.transition = 'opacity .7s ease, transform .7s ease';
-    io.observe(el);
-  });
+  }
 
   // ---------- FORM ----------
-  document.querySelector('form')?.addEventListener('submit', (e)=>{
+  const form = document.querySelector('form[data-cta="anfrage"]');
+  form?.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const btn = e.target.querySelector('[type="submit"]');
-    btn.textContent = 'Danke — Anfrage erfasst ✓';
-    btn.style.background = 'var(--accent)';
-    btn.style.borderColor = 'var(--accent)';
-    btn.style.color = 'var(--paper)';
+
+    if(!form.reportValidity()){
+      return;
+    }
+
+    const btn = form.querySelector('[type="submit"]');
+    const data = new FormData(form);
+    const subject = encodeURIComponent(`Projektanfrage von ${data.get('name') || 'Website'}`);
+    const body = encodeURIComponent([
+      `Name: ${data.get('name') || ''}`,
+      `E-Mail: ${data.get('mail') || ''}`,
+      `Telefon: ${data.get('tel') || ''}`,
+      `Projekttyp: ${data.get('typ') || ''}`,
+      `Ort: ${data.get('ort') || ''}`,
+      `Leistungsphase / Anliegen: ${data.get('lp') || ''}`,
+      `Budgetrahmen: ${data.get('budget') || ''}`,
+      '',
+      data.get('msg') || ''
+    ].join('\n'));
+
+    if(btn){
+      btn.textContent = 'E-Mail-Entwurf wird geöffnet …';
+      btn.style.background = 'var(--accent)';
+      btn.style.borderColor = 'var(--accent)';
+      btn.style.color = 'var(--paper)';
+    }
+
+    window.location.href = `mailto:info@architekten-kauschke.de?subject=${subject}&body=${body}`;
   });
 })();
 </script>

@@ -1,0 +1,14 @@
+{
+  "name": "akp-architekten-landingpage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Statische Landingpage für AKP Architekten, vorbereitet für Railway-Deployments.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "npm run test:static && npm run test:server",
+    "test:static": "node tests/static.test.mjs",
+    "serve": "node server.mjs",
+    "test:server": "node tests/server.test.mjs"
+  }
+}
