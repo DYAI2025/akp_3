@@ -1,0 +1,1500 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AKP Architekten Kauschke + Partner — Architektur und Generalplanung aus Berlin</title>
+<meta name="description" content="AKP Architekten Kauschke + Partner planen seit 1991 Architektur, Generalplanung und Bauleitung für Wohnungsbau, Gesundheitsbauten, Verwaltungs-, Gewerbe- und Industriebauten sowie Sanierung und Modernisierung." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper: #f3efe7;
+    --paper-2: #ece7dc;
+    --paper-3: #e3ddcf;
+    --ink: #1a1a17;
+    --ink-2: #2b2a26;
+    --muted: #6b6960;
+    --muted-2: #97948a;
+    --rule: #c9c2b1;
+    --rule-soft: #d8d2c2;
+    --accent: #6a6f4c; /* moss */
+    --serif: "Cormorant Garamond", "Libre Baskerville", "Times New Roman", serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{background:var(--paper)}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:#1a1a17;color:#f3efe7}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+  .mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .mono.ink{color:var(--ink)}
+  .label{font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .rule{height:1px;background:var(--rule);width:100%}
+  .hair{border:0;height:1px;background:var(--rule-soft);margin:0}
+
+  /* ---------- Z-AXIS GALLERY STAGE ---------- */
+  /* stage height = (N + 1) * 100vh — 1vh head + N segments per image */
+  .intro-scroll-stage{
+    position:relative;
+    height: calc((var(--gallery-count, 5) + 1) * 100vh);
+  }
+  .hero-scene{
+    position:sticky;
+    top:0;
+    height:100vh;
+    perspective:1600px;
+    perspective-origin:50% 38%;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .hero-scene::before{
+    content:"";
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, rgba(26,26,23,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(26,26,23,.045) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 75%);
+    pointer-events:none;
+    opacity:.4;
+  }
+
+  /* top frame — quiet browser/page chrome */
+  .top-frame{
+    position:absolute;
+    top:0;left:0;right:0;
+    padding:22px 40px 0 40px;
+    display:flex;align-items:center;justify-content:space-between;
+    z-index:50;
+  }
+  .brand{
+    font-family:var(--serif);font-weight:400;font-size:14px;
+    color:var(--ink);line-height:1.15;
+  }
+  .brand small{display:block;font-family:var(--sans);font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+  .nav{display:flex;gap:28px}
+  .nav a{font-size:12px;letter-spacing:.04em;color:var(--ink-2);padding:6px 0}
+  .nav a:hover{color:var(--accent)}
+  .top-meta{
+    position:absolute; top:62px; left:40px; right:40px;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    z-index:50; pointer-events:none;
+  }
+
+  /* gallery layout: image stack on the left, info panel on the right */
+  .gallery-shell{
+    position:absolute; inset:0;
+    display:grid;
+    grid-template-columns: 1fr min(420px, 32vw);
+    pointer-events:none;
+  }
+  .gallery-shell > * { pointer-events:auto }
+
+  .image-stage{
+    position:relative;
+    transform-style:preserve-3d;
+    perspective:1600px;
+    perspective-origin: 50% 40%;
+  }
+
+  .image-plane{
+    position:absolute;
+    top:50%; left:50%;
+    width: min(62vw, 1100px);
+    height: 64vh;
+    transform: translate(-50%, -50%)
+               translateZ(var(--tz, 0px))
+               scale(var(--sc, 1))
+               rotateX(var(--rx, 0deg));
+    transform-origin: 50% 100%;
+    transform-style:preserve-3d;
+    opacity: var(--op, 1);
+    will-change: transform, opacity;
+    pointer-events:none;
+  }
+  .image-plane .frame{
+    position:absolute; inset:0;
+    overflow:hidden;
+    background:var(--paper-2);
+    box-shadow:
+      0 1px 0 rgba(26,26,23,.05),
+      0 30px 60px -40px rgba(26,26,23,.30),
+      0 60px 120px -60px rgba(26,26,23,.20);
+  }
+  .image-plane .frame img{
+    width:100%; height:100%;
+    object-fit:cover; object-position:50% 55%;
+    filter: brightness(calc(1 - var(--dim, 0) * .25));
+  }
+  .image-plane .curl-shadow{
+    position:absolute; top:0; left:0; right:0;
+    height: calc(var(--curl, 0) * 65%);
+    background: linear-gradient(to bottom,
+      rgba(26,26,23,.55) 0%, rgba(26,26,23,.30) 30%,
+      rgba(26,26,23,.10) 70%, rgba(26,26,23,0) 100%);
+    mix-blend-mode: multiply;
+    opacity: calc(var(--curl, 0) * 1.05);
+    pointer-events:none;
+  }
+  .image-plane .crease{
+    position:absolute; left:-2%; right:-2%;
+    top: calc(var(--curl, 0) * 65%);
+    height:1px;
+    background: linear-gradient(to right,
+      transparent, rgba(243,239,231,.85) 8%, rgba(243,239,231,.95) 50%,
+      rgba(243,239,231,.85) 92%, transparent);
+    box-shadow: 0 -2px 8px rgba(243,239,231,.6), 0 1px 6px rgba(26,26,23,.22);
+    opacity: calc(var(--curl, 0) * 1.4);
+    pointer-events:none;
+  }
+  .image-plane .corner-ticks{
+    position:absolute; inset:-14px;
+    pointer-events:none;
+    opacity: var(--ticks, 0);
+    transition: opacity .25s ease;
+  }
+  .image-plane .corner-ticks span{
+    position:absolute; width:14px; height:14px;
+    border:1px solid var(--ink);
+  }
+  .image-plane .corner-ticks span:nth-child(1){top:0;left:0;border-right:0;border-bottom:0}
+  .image-plane .corner-ticks span:nth-child(2){top:0;right:0;border-left:0;border-bottom:0}
+  .image-plane .corner-ticks span:nth-child(3){bottom:0;left:0;border-right:0;border-top:0}
+  .image-plane .corner-ticks span:nth-child(4){bottom:0;right:0;border-left:0;border-top:0}
+  .image-plane .index-mark{
+    position:absolute; left:0; top:-28px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; color:var(--muted);
+    text-transform:uppercase;
+    opacity: var(--ticks, 0);
+  }
+
+  /* ----- right info panel ----- */
+  .info-panel{
+    position:relative;
+    border-left:1px solid var(--rule);
+    background: linear-gradient(to right, rgba(243,239,231,0) 0%, rgba(243,239,231,.55) 8%, var(--paper) 24%);
+    padding: 110px 36px 36px 36px;
+    display:flex; flex-direction:column;
+    z-index:10;
+    overflow:hidden;
+  }
+  .info-panel::before{
+    content:"";
+    position:absolute; left:0; top:110px; bottom:36px; width:1px;
+    background: var(--rule);
+  }
+  .info-panel .meta-top{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; color:var(--muted);
+    text-transform:uppercase;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:14px; margin-bottom:18px;
+  }
+  .info-panel .meta-top .counter em{font-style:normal; color:var(--ink); font-size:13px; letter-spacing:.04em}
+
+  .info-panel .stack{ position:relative; flex:1; min-height:380px }
+  .info-card{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; gap:14px;
+    transition: opacity .55s ease, transform .55s ease;
+    opacity:0; transform: translateY(12px);
+    pointer-events:none;
+  }
+  .info-card.active{ opacity:1; transform:translateY(0); pointer-events:auto }
+  .info-card .kicker{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.18em;
+    color:var(--accent); text-transform:uppercase;
+  }
+  .info-card h1{
+    font-family:var(--serif); font-weight:400;
+    font-size: clamp(28px, 2.6vw, 38px);
+    line-height:1.06; letter-spacing:-0.005em;
+    margin:0; color:var(--ink); text-wrap:balance;
+  }
+  .info-card h1 em{font-style:italic; color:var(--accent)}
+  .info-card .where{
+    font-family:var(--serif); font-size:16px; color:var(--muted);
+    margin:0; padding:8px 0 12px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .info-card p.body{
+    font-family:var(--sans); font-size:13px; line-height:1.65;
+    color:var(--ink-2); margin:0;
+  }
+  .info-card dl{
+    margin: 6px 0 0 0; display:grid;
+    grid-template-columns: 92px 1fr; gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .info-card dt{
+    font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+    color:var(--muted); text-transform:uppercase;
+    padding:10px 0; border-bottom:1px solid var(--rule-soft);
+  }
+  .info-card dd{
+    margin:0; padding:10px 0;
+    font-family:var(--serif); font-size:14.5px; color:var(--ink);
+    border-bottom:1px solid var(--rule-soft);
+  }
+  .info-card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .info-card .tags span{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+    color:var(--muted); text-transform:uppercase;
+    padding:3px 7px; border:1px solid var(--rule);
+  }
+
+  .info-panel .panel-footer{
+    margin-top:24px;
+    display:flex; flex-direction:column; gap:14px;
+    border-top:1px solid var(--ink);
+    padding-top:18px;
+  }
+  .panel-progress{
+    display:flex; flex-direction:column; gap:8px;
+    font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+    color:var(--muted); text-transform:uppercase;
+  }
+  .panel-progress .bar{height:1px; background:var(--rule); position:relative}
+  .panel-progress .bar i{
+    position:absolute; left:0; top:-1px; height:3px;
+    width: var(--gallery-progress, 0%);
+    background:var(--ink);
+    transition: width .25s ease;
+  }
+  .panel-dots{display:flex;gap:6px}
+  .panel-dots button{
+    flex:1; height:4px; background:var(--rule);
+    border:0; padding:0; cursor:pointer;
+    transition: background .25s ease, height .25s ease;
+  }
+  .panel-dots button.active{background:var(--ink); height:6px; margin-top:-1px}
+  .panel-dots button:hover{background:var(--accent)}
+
+  /* scroll hint */
+  .scroll-hint{
+    position:absolute; left:40px; bottom:36px;
+    z-index:30;
+    display:flex; align-items:center; gap:14px;
+    color:var(--muted);
+    opacity: var(--hint-op, 1);
+    transition: opacity .4s ease;
+  }
+  .scroll-hint .line{
+    width:60px; height:1px; background:var(--rule); position:relative; overflow:hidden;
+  }
+  .scroll-hint .line::after{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:30%;
+    background:var(--ink);
+    animation: drip 2.4s ease-in-out infinite;
+  }
+  @keyframes drip{
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(330%)}
+  }
+  .scroll-hint .mono{font-size:10.5px}
+
+  /* small bottom anchors that fade out at end of gallery */
+  .hero-anchors{
+    position:absolute; left:40px; bottom:88px;
+    display:flex; gap:0; z-index:30;
+    border-top:1px solid var(--rule);
+    padding-top:14px;
+    width: min(520px, 44vw);
+    opacity: var(--hint-op, 1);
+    transition: opacity .4s ease;
+  }
+  .hero-anchors a{
+    flex:1; display:block;
+    font-family:var(--serif); font-size:16px; line-height:1.2;
+    color:var(--ink); padding-right:14px;
+    border-right:1px solid var(--rule);
+  }
+  .hero-anchors a:last-child{border-right:0}
+  .hero-anchors a + a{padding-left:14px}
+  .hero-anchors a small{
+    display:block; font-family:var(--mono);
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:5px;
+  }
+  .hero-anchors a:hover{color:var(--accent)}
+
+  /* ---------- MAIN CONTENT (after hero) ---------- */
+  main{
+    position:relative;
+    z-index:2;
+    background:var(--paper);
+  }
+  .container{
+    max-width:1320px;margin:0 auto;
+    padding: 0 max(24px, 4vw);
+  }
+  .section-head{
+    display:grid; grid-template-columns: 200px 1fr; gap:48px;
+    align-items:start;
+    padding-top:56px; padding-bottom:32px;
+    border-top:1px solid var(--rule);
+  }
+  .section-head .num{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .section-head h2{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(34px, 4vw, 56px);
+    line-height:1.05;letter-spacing:-0.005em;
+    margin:0;
+    text-wrap:balance;
+  }
+  .section-head h2 em{font-style:italic;color:var(--accent)}
+  .section-head p.kicker{
+    font-family:var(--sans); color:var(--muted);
+    margin:14px 0 0 0; font-size:13.5px; max-width:560px;
+  }
+
+  /* Section 1: Haltung */
+  .haltung{
+    display:grid; grid-template-columns: 200px 1fr 1fr; gap:48px;
+    padding: 24px 0 96px 0;
+  }
+  .haltung .lead p{
+    font-family:var(--serif);
+    font-size:clamp(20px, 1.8vw, 26px);
+    line-height:1.35;
+    margin:0 0 24px 0;
+    color:var(--ink);
+  }
+  .haltung .principles{
+    display:grid;grid-template-columns:1fr;gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .haltung .principles article{
+    display:grid;grid-template-columns:48px 1fr;gap:20px;
+    padding:18px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .haltung .principles article .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;padding-top:4px}
+  .haltung .principles article h4{
+    font-family:var(--serif);font-weight:500;
+    font-size:18px;margin:0 0 4px 0;
+  }
+  .haltung .principles article p{font-size:13px;color:var(--muted);margin:0;line-height:1.55}
+
+  /* Section 2: Leistungen */
+  .leistungen{padding: 24px 0 96px 0}
+  .process{
+    display:grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap:0;
+    margin: 16px 0 56px 0;
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--rule);
+  }
+  .process .step{
+    padding:20px 16px 24px 0;
+    border-right:1px solid var(--rule);
+    position:relative;
+  }
+  .process .step:last-child{border-right:0}
+  .process .step .num{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  .process .step h4{
+    font-family:var(--serif);font-weight:500;font-size:17px;margin:0 0 4px 0;line-height:1.2;
+  }
+  .process .step p{font-size:11.5px;color:var(--muted);margin:0;letter-spacing:.02em}
+  /* connecting hairline */
+  .process-line{
+    position:relative;height:1px;background:var(--rule);margin: 0 0 12px 0;
+  }
+  .leistungen .support{
+    display:grid; grid-template-columns: 200px 1fr; gap:48px;
+    padding-top:8px;
+  }
+  .leistungen .support h3{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;
+    margin:0;font-weight:400;
+  }
+  .leistungen .support ul{
+    list-style:none;padding:0;margin:0;
+    columns:2;column-gap:48px;
+  }
+  .leistungen .support li{
+    font-family:var(--serif);font-size:18px;line-height:1.4;
+    padding:8px 0;border-bottom:1px solid var(--rule-soft);
+    break-inside:avoid;
+  }
+
+  /* Section 3: Projekte */
+  .projekte{padding: 24px 0 96px 0}
+  .filters{
+    display:flex;flex-wrap:wrap;gap:6px 8px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:14px 0;
+    margin-bottom:32px;
+  }
+  .filters button{
+    font-family:var(--mono);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);
+    padding:6px 10px;
+    border:1px solid transparent;
+    transition: all .2s ease;
+  }
+  .filters button:hover{color:var(--ink);border-color:var(--rule)}
+  .filters button.active{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+  .filters .group-label{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;
+    padding:6px 12px 6px 4px; align-self:center;
+  }
+  .filters .sep{width:1px; height:18px; background:var(--rule); align-self:center; margin:0 4px}
+
+  .project-grid{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border:1px solid var(--rule);
+  }
+  .project-card{
+    background:var(--paper);
+    padding:20px;
+    display:flex;flex-direction:column;
+    transition: background .25s ease;
+    cursor: pointer;
+    position:relative;
+  }
+  .project-card:hover{background: var(--paper-2)}
+  .project-card .img{
+    aspect-ratio: 16/10;
+    background:var(--paper-3);
+    margin: 0 0 16px 0;
+    overflow:hidden;
+    position:relative;
+  }
+  .project-card .img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .project-card:hover .img img{transform:scale(1.02)}
+  .project-card .img.placeholder{
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 14px, rgba(26,26,23,.05) 14px 15px);
+    display:grid;place-items:center;
+  }
+  .project-card .img.placeholder span{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;
+  }
+  .project-card .meta{
+    display:flex;justify-content:space-between;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;
+    padding-bottom:8px;border-bottom:1px solid var(--rule);
+    margin-bottom:10px;
+  }
+  .project-card h4{
+    font-family:var(--serif);font-weight:500;
+    font-size:21px;line-height:1.2;
+    margin:0 0 6px 0;
+  }
+  .project-card .where{font-size:12.5px;color:var(--muted);margin:0 0 10px 0}
+  .project-card p.desc{font-size:13px;color:var(--ink-2);line-height:1.5;margin:0 0 14px 0}
+  .project-card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+  .project-card .tags span{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;
+    padding:3px 7px;border:1px solid var(--rule);
+  }
+
+  /* Card sizing in 12-col grid */
+  .project-card.span-6{grid-column: span 6}
+  .project-card.span-4{grid-column: span 4}
+  .project-card.span-3{grid-column: span 3}
+  .project-card.span-8{grid-column: span 8}
+  .project-card.span-5{grid-column: span 5}
+  .project-card.span-7{grid-column: span 7}
+
+  /* Section 4: Kompetenzen */
+  .kompetenzen{padding:24px 0 96px 0; position:relative}
+  .competence-matrix{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--ink);
+    position:relative;
+  }
+  .competence-matrix::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, var(--rule-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule-soft) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events:none;
+    opacity:.5;
+  }
+  .competence-matrix article{
+    padding:32px 28px 36px 0;
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    background: linear-gradient(to right, var(--paper) 0%, transparent 100%);
+    position:relative;
+  }
+  .competence-matrix article:nth-child(3n){border-right:0}
+  .competence-matrix article .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:18px;display:block}
+  .competence-matrix article h4{
+    font-family:var(--serif);font-weight:500;font-size:24px;
+    margin:0 0 12px 0;line-height:1.15;
+  }
+  .competence-matrix article p{font-size:13px;line-height:1.55;color:var(--ink-2);margin:0 0 18px 0}
+  .competence-matrix article .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .competence-matrix article .tags span{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;
+    padding:3px 7px;border:1px solid var(--rule);
+  }
+
+  /* Section 5: Geschichte */
+  .geschichte{padding:24px 0 96px 0}
+  .timeline{
+    display:grid;grid-template-columns:repeat(7,1fr);
+    border-top:1px solid var(--ink);
+    margin: 0 0 56px 0;
+  }
+  .timeline .t{
+    padding:18px 14px 22px 0;
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    position:relative;
+  }
+  .timeline .t:last-child{border-right:0}
+  .timeline .t .y{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+  .timeline .t h4{font-family:var(--serif);font-weight:500;font-size:17px;margin:0 0 6px 0;line-height:1.2}
+  .timeline .t p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+  .timeline .t::after{
+    content:"";position:absolute;top:-1px;left:0;width:8px;height:1px;background:var(--ink);
+  }
+  .kennzahlen{
+    display:grid;grid-template-columns:repeat(5,1fr);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  .kennzahlen div{
+    padding:24px 16px;
+    border-right:1px solid var(--rule);
+  }
+  .kennzahlen div:last-child{border-right:0}
+  .kennzahlen .num{
+    font-family:var(--serif); font-weight:400;
+    font-size:48px; line-height:1; letter-spacing:-.01em;
+    margin-bottom:6px;
+  }
+  .kennzahlen .num em{font-style:italic;color:var(--accent)}
+  .kennzahlen .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+
+  /* Section 6: Veröffentlichungen */
+  .pubs{padding:24px 0 96px 0}
+  .pubs .group{
+    display:grid;grid-template-columns:200px 1fr;gap:48px;
+    padding:22px 0;
+    border-top:1px solid var(--rule);
+  }
+  .pubs .group h3{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;
+    margin:6px 0 0 0;font-weight:400;
+  }
+  .pubs .group ul{list-style:none;padding:0;margin:0}
+  .pubs .group li{
+    display:grid;grid-template-columns:1fr auto;gap:24px;align-items:baseline;
+    font-family:var(--serif);font-size:17px;
+    padding:8px 0;border-bottom:1px dashed var(--rule-soft);
+  }
+  .pubs .group li:last-child{border-bottom:0}
+  .pubs .group li .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+
+  /* Section 7: Netzwerk */
+  .netzwerk{padding:24px 0 96px 0}
+  .netz-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--ink);
+    border-left:1px solid var(--rule);
+  }
+  .netz-grid details{
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding: 0;
+    background: var(--paper);
+  }
+  .netz-grid summary{
+    list-style:none;
+    cursor:pointer;
+    padding: 22px 22px 22px 22px;
+    display:flex;flex-direction:column;gap:8px;
+    position:relative;
+    transition: background .2s ease;
+  }
+  .netz-grid summary::-webkit-details-marker{display:none}
+  .netz-grid summary:hover{background:var(--paper-2)}
+  .netz-grid summary .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+  .netz-grid summary .t{font-family:var(--serif);font-size:21px;line-height:1.15;font-weight:500}
+  .netz-grid summary::after{
+    content:"+";position:absolute;top:22px;right:22px;
+    font-family:var(--mono);font-size:18px;color:var(--muted);
+    transition:transform .2s ease;
+  }
+  .netz-grid details[open] summary::after{content:"–"}
+  .netz-grid .body{
+    padding: 0 22px 22px 22px;
+    font-family:var(--sans);font-size:13px;color:var(--ink-2);line-height:1.6;
+  }
+  .netz-grid .body ul{list-style:none;padding:0;margin:0}
+  .netz-grid .body li{padding:6px 0;border-bottom:1px solid var(--rule-soft);font-family:var(--serif);font-size:15px}
+  .netz-grid .body li:last-child{border-bottom:0}
+
+  /* Section 8: Kontakt */
+  .kontakt{padding:24px 0 120px 0}
+  .kontakt-grid{
+    display:grid;grid-template-columns: 1fr 1.2fr; gap:80px;
+    padding-top:24px;
+  }
+  .kontakt .info dl{margin:0;display:grid;grid-template-columns:120px 1fr;gap:0}
+  .kontakt .info dt{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;
+    padding:14px 0;border-bottom:1px solid var(--rule-soft);
+  }
+  .kontakt .info dd{
+    font-family:var(--serif);font-size:18px;color:var(--ink);
+    margin:0;padding:14px 0;border-bottom:1px solid var(--rule-soft);
+  }
+  .kontakt .info dd a:hover{color:var(--accent)}
+  .kontakt .info .address{
+    font-family:var(--serif);font-size:24px;line-height:1.3;
+    border-top:1px solid var(--ink);
+    padding-top:18px;margin-top:20px;
+  }
+  .kontakt form{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink)}
+  .kontakt form .field{
+    padding:14px 16px 14px 0;
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .kontakt form .field:nth-child(2n){border-right:0;padding-left:16px}
+  .kontakt form .field.full{grid-column:1/-1;border-right:0;padding-left:0;padding-right:16px}
+  .kontakt form .field.full + .field.full{padding-left:0}
+  .kontakt form label{
+    font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;
+  }
+  .kontakt form input, .kontakt form select, .kontakt form textarea{
+    font-family:var(--serif);font-size:17px;color:var(--ink);
+    border:0;background:transparent;outline:none;padding:4px 0;width:100%;
+    border-bottom: 1px solid transparent;
+  }
+  .kontakt form input:focus, .kontakt form select:focus, .kontakt form textarea:focus{
+    border-bottom-color: var(--accent);
+  }
+  .kontakt form textarea{min-height:120px;resize:vertical;font-family:var(--sans);font-size:14px;line-height:1.5}
+  .kontakt form .file{
+    grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;
+    padding:18px 0;border-bottom:1px solid var(--rule);
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;
+  }
+  .kontakt form .file button{
+    border:1px solid var(--rule);padding:8px 14px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink);text-transform:uppercase;
+  }
+  .kontakt form .file button:hover{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+  .kontakt form .privacy{
+    grid-column:1/-1;display:flex;align-items:flex-start;gap:12px;
+    padding:18px 0;font-size:12px;color:var(--muted);line-height:1.5;
+  }
+  .kontakt form .privacy input{width:14px;height:14px;flex:0 0 auto;margin-top:3px}
+  .kontakt form .submit{
+    grid-column:1/-1;display:flex;justify-content:flex-end;padding-top:18px;
+  }
+  .kontakt form .submit button{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    border:1px solid var(--ink);padding:14px 22px;color:var(--ink);
+    transition: all .2s ease;
+  }
+  .kontakt form .submit button:hover{background:var(--ink);color:var(--paper)}
+
+  /* footer */
+  footer{
+    border-top:1px solid var(--ink);
+    background:var(--paper);
+    padding: 36px max(24px,4vw) 28px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;
+  }
+  footer .brand-foot{font-family:var(--serif);font-size:18px}
+  footer .brand-foot small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-top:6px}
+  footer .colofon{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+
+  /* custom cursor */
+  .cursor{
+    position:fixed;top:0;left:0;
+    width:32px;height:32px;border-radius:50%;
+    border:1px solid var(--ink);
+    transform: translate(-50%,-50%);
+    pointer-events:none;
+    z-index:9999;
+    transition: width .25s ease, height .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
+    display:grid;place-items:center;
+    font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:transparent;
+    mix-blend-mode: difference;
+    background: transparent;
+  }
+  .cursor.visible{opacity:1}
+  .cursor.hover-project{width:74px;height:74px;background:var(--paper);color:var(--ink);mix-blend-mode:normal;border-color:var(--ink)}
+  .cursor.hover-cta{width:88px;height:88px;background:var(--ink);color:var(--paper);border-color:var(--ink);mix-blend-mode:normal}
+  .cursor.hover-project::before{content:"Projekt"}
+  .cursor.hover-cta::before{content:"Anfragen"}
+  @media (hover: none){ .cursor{display:none} }
+
+  /* progress indicator */
+  .progress-rail{
+    position:fixed;
+    right:18px; top:50%; transform:translateY(-50%);
+    width:1px; height:240px; background:var(--rule);
+    z-index:50;
+  }
+  .progress-rail .fill{
+    position:absolute;left:-1px;top:0;width:3px; height: var(--page-progress, 0%);
+    background: var(--ink);
+  }
+  .progress-rail .ticks{position:absolute;inset:0}
+  .progress-rail .tick{position:absolute;left:-3px;width:7px;height:1px;background:var(--rule)}
+
+  /* responsive */
+  @media (max-width: 980px){
+    .top-frame{padding:16px 20px 0 20px}
+    .nav{display:none}
+    .hero-claim{left:20px;right:20px;top:18vh;padding-right:0;background: rgba(243,239,231,.85);}
+    .hero-claim h1{font-size: clamp(28px, 7vw, 40px)}
+    .hero-image-plane{width:88vw;height:54vh}
+    .hero-anchors{left:20px;right:20px;width:auto}
+    .hero-anchors a{font-size:14px}
+    .scroll-hint{display:none}
+    .haltung{grid-template-columns:1fr}
+    .section-head{grid-template-columns:1fr;gap:12px}
+    .process{grid-template-columns:repeat(2,1fr)}
+    .process .step{border-bottom:1px solid var(--rule)}
+    .leistungen .support{grid-template-columns:1fr}
+    .leistungen .support ul{columns:1}
+    .competence-matrix{grid-template-columns:1fr}
+    .competence-matrix article{border-right:0}
+    .timeline{grid-template-columns:repeat(2,1fr)}
+    .timeline .t{border-bottom:1px solid var(--rule)}
+    .kennzahlen{grid-template-columns:repeat(2,1fr)}
+    .kennzahlen div{border-bottom:1px solid var(--rule)}
+    .pubs .group{grid-template-columns:1fr;gap:8px}
+    .netz-grid{grid-template-columns:1fr 1fr}
+    .kontakt-grid{grid-template-columns:1fr;gap:48px}
+    .kontakt form{grid-template-columns:1fr}
+    .kontakt form .field{border-right:0;padding-left:0!important}
+    .project-card.span-6,.project-card.span-4,.project-card.span-3,.project-card.span-8,.project-card.span-5,.project-card.span-7{grid-column:1/-1}
+    .progress-rail{display:none}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero-image-plane{transform: translate(-50%,-50%) !important; transition:none}
+    .content-layer{transform:none !important; opacity:1 !important; pointer-events:auto !important; position:relative !important; height:auto;}
+    .content-layer .preview-card{position:relative;top:auto;left:auto;transform:none;margin:48px auto}
+    .intro-scroll-stage{height:auto}
+    .hero-scene{position:relative;height:100vh}
+    .scroll-hint .line::after{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<!-- progress rail -->
+<div class="progress-rail" aria-hidden="true">
+  <div class="fill"></div>
+  <div class="ticks">
+    <div class="tick" style="top:0%"></div>
+    <div class="tick" style="top:14%"></div>
+    <div class="tick" style="top:28%"></div>
+    <div class="tick" style="top:42%"></div>
+    <div class="tick" style="top:56%"></div>
+    <div class="tick" style="top:70%"></div>
+    <div class="tick" style="top:84%"></div>
+    <div class="tick" style="top:100%"></div>
+  </div>
+</div>
+
+<!-- =================== HERO =================== -->
+<section class="intro-scroll-stage" id="hero" data-screen-label="01 Hero">
+  <div class="hero-scene">
+
+    <!-- top frame -->
+    <header class="top-frame">
+      <div class="brand">
+        AKP Architekten Kauschke + Partner
+        <small>Berlin · seit 1991</small>
+      </div>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="#buero">Büro</a>
+        <a href="#leistungen">Leistungen</a>
+        <a href="#projekte">Projekte</a>
+        <a href="#kompetenzen">Kompetenzen</a>
+        <a href="#geschichte">Geschichte</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </header>
+
+    <div class="top-meta">
+      <span class="mono">№ 001 — Frontblatt</span>
+      <span class="mono">Hohenzollerndamm 12 · 10717 Berlin</span>
+    </div>
+
+    <!-- front layer with image + claim -->
+    <div class="hero-front-layer">
+      <div class="hero-canvas">
+        <div class="hero-image-plane">
+          <div class="frame">
+            <img src="assets/hero-pestalozzi.jpg" alt="Wohnungsbau Pestalozzistraße 45–46, Berlin-Charlottenburg" />
+            <div class="curl-shadow" aria-hidden="true"></div>
+            <div class="crease" aria-hidden="true"></div>
+          </div>
+          <div class="caption" aria-hidden="true">
+            <span class="dot"></span>
+            <span>Pestalozzistraße 45–46 · Berlin-Charlottenburg</span>
+            <span>Wohnungsbau · Stadtreparatur</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-claim">
+        <div class="eyebrow">
+          <span class="bar"></span>
+          <span class="mono ink">Frontblatt — Haltung</span>
+        </div>
+        <h1>Architektur, die städtebaulichen Kontext, wirtschaftliche Realisierbarkeit und <em>technische Planungssicherheit</em> zusammenführt.</h1>
+        <p class="lede">Seit 1991 plant AKP Architekten Kauschke + Partner Bauaufgaben in Berlin, Deutschland und international — vom ersten Entwurf bis zur Schlüsselübergabe.</p>
+        <div class="labels">
+          <span>Berlin</span>
+          <span>seit 1991</span>
+          <span>Architektur + Generalplanung</span>
+          <span>Entwurf bis Schlüsselübergabe</span>
+        </div>
+      </div>
+
+      <nav class="hero-anchors" aria-label="Themenanker">
+        <a href="#kompetenzen"><small>I</small>Stadtreparatur</a>
+        <a href="#leistungen"><small>II</small>Generalplanung</a>
+        <a href="#projekte"><small>III</small>Bestand &amp; Zukunft</a>
+      </nav>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <span class="mono">Scroll · Blatt aufrollen</span>
+        <span class="line"></span>
+      </div>
+    </div>
+
+    <!-- content preview that emerges from depth -->
+    <div class="content-layer" aria-hidden="true">
+      <div class="preview-card">
+        <div class="mono ink">Inhaltsverzeichnis</div>
+        <h2>Acht Sektionen — von der Haltung des Büros bis zum Kontakt.</h2>
+        <div class="grid">
+          <div><h3>01</h3><p>Büro &amp; Haltung</p></div>
+          <div><h3>02</h3><p>Leistungen &amp; Prozess</p></div>
+          <div><h3>03</h3><p>Projekte &amp; Portfolio</p></div>
+          <div><h3>04</h3><p>Kompetenzen</p></div>
+          <div><h3>05</h3><p>Geschichte &amp; Vita</p></div>
+          <div><h3>06</h3><p>Veröffentlichungen</p></div>
+          <div><h3>07</h3><p>Netzwerk</p></div>
+          <div><h3>08</h3><p>Kontakt</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== MAIN =================== -->
+<main>
+
+  <!-- 01 BÜRO / HALTUNG -->
+  <section id="buero" data-screen-label="02 Büro / Haltung" class="container">
+    <div class="section-head">
+      <div class="num">01 — Büro</div>
+      <div>
+        <h2>Kontext statt Stilvorgabe. <em>Wirtschaftlichkeit als Entwurfsfaktor.</em></h2>
+        <p class="kicker">AKP versteht Architektur als Zusammenspiel funktionaler, ökonomischer und ökologischer Parameter — verankert in Ort, Aufgabe und Bestand.</p>
+      </div>
+    </div>
+
+    <div class="haltung">
+      <aside class="lead">
+        <p>Wir planen nicht aus einem Stil heraus, sondern aus dem Ort und der Aufgabe.</p>
+        <p class="mono">Berlin · seit 1991</p>
+      </aside>
+      <div class="principles">
+        <article><div class="n">a</div><div><h4>Kontext statt Stilvorgabe</h4><p>Jeder Entwurf antwortet auf seinen städtebaulichen, sozialen und gebauten Zusammenhang.</p></div></article>
+        <article><div class="n">b</div><div><h4>Wirtschaftlichkeit als Entwurfsfaktor</h4><p>Kosten, Realisierbarkeit und Betriebsperspektive werden als Gestaltungsparameter mitgedacht.</p></div></article>
+        <article><div class="n">c</div><div><h4>Technische Planungssicherheit</h4><p>Detailtiefe, Genehmigungsfähigkeit und Ausführungsplanung sind tragende Disziplinen des Büros.</p></div></article>
+        <article><div class="n">d</div><div><h4>Material nach Aufgabe und Ort</h4><p>Materialwahl folgt der Bauaufgabe — vom robusten Bestandseingriff bis zum sorgfältigen Innenausbau.</p></div></article>
+      </div>
+      <div class="principles">
+        <article><div class="n">e</div><div><h4>Grundrisse als ordnendes Werkzeug</h4><p>Der Grundriss organisiert Nutzung, Belichtung, Ökonomie und Konstruktion — bevor die Fassade spricht.</p></div></article>
+        <article><div class="n">f</div><div><h4>Behutsame Stadterneuerung</h4><p>Bestand wird gelesen, repariert und weitergebaut, anstatt überschrieben zu werden.</p></div></article>
+        <article><div class="n">g</div><div><h4>Funktional, ökonomisch, ökologisch</h4><p>Drei Parameter, die ein Projekt gleichberechtigt prüfen — von Programm bis Energiekonzept.</p></div></article>
+        <article><div class="n">h</div><div><h4>Vom Entwurf bis zur Übergabe</h4><p>Das Büro begleitet Bauaufgaben durchgängig — von der ersten Skizze bis zur Schlüsselübergabe.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 LEISTUNGEN / PROZESS -->
+  <section id="leistungen" data-screen-label="03 Leistungen" class="container">
+    <div class="section-head">
+      <div class="num">02 — Leistungen</div>
+      <div>
+        <h2>Eine durchgehende Leistungskette — <em>vom Entwurf bis zur Schlüsselübergabe.</em></h2>
+        <p class="kicker">Generalplanung als Haltung: AKP führt die wesentlichen Leistungsphasen im Haus zusammen und bindet das Fachnetzwerk gezielt an.</p>
+      </div>
+    </div>
+
+    <div class="process" role="list">
+      <div class="step" role="listitem"><div class="num">01</div><h4>Entwurf</h4><p>Konzept · Kontext · Programm</p></div>
+      <div class="step" role="listitem"><div class="num">02</div><h4>Genehmigung</h4><p>Bauantrag · Behörden</p></div>
+      <div class="step" role="listitem"><div class="num">03</div><h4>Ausführung</h4><p>Werkplanung · Detail</p></div>
+      <div class="step" role="listitem"><div class="num">04</div><h4>Ausschreibung</h4><p>Leistungsverzeichnis</p></div>
+      <div class="step" role="listitem"><div class="num">05</div><h4>Vergabe</h4><p>Firmenauswahl</p></div>
+      <div class="step" role="listitem"><div class="num">06</div><h4>Bauleitung</h4><p>Qualität · Kosten · Termin</p></div>
+      <div class="step" role="listitem"><div class="num">07</div><h4>Abrechnung</h4><p>Prüfung · Kontrolle</p></div>
+      <div class="step" role="listitem"><div class="num">08</div><h4>Übergabe</h4><p>Schlüssel · Inbetriebnahme</p></div>
+    </div>
+
+    <div class="support">
+      <h3>Unterstützende<br/>Leistungen</h3>
+      <ul>
+        <li>Grundstücksanalyse</li>
+        <li>Kaufverhandlungen</li>
+        <li>Finanzierung</li>
+        <li>Investitionsförderung</li>
+        <li>Arbeitsschutz- und Sicherheitstechnik</li>
+        <li>Energieeffiziente Planung und Beratung</li>
+        <li>Energieausweise</li>
+        <li>Optimierung von Preis-Leistung und Baufirmenauswahl</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 03 PROJEKTE -->
+  <section id="projekte" data-screen-label="04 Projekte" class="container">
+    <div class="section-head">
+      <div class="num">03 — Projekte</div>
+      <div>
+        <h2>Projektarchiv — <em>Wohnen, Pflege, Verwaltung, Bestand.</em></h2>
+        <p class="kicker">Eine Auswahl realisierter und projektierter Bauten aus Berlin, Deutschland und internationalem Kontext.</p>
+      </div>
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="Projektfilter">
+      <span class="group-label">Typologie</span>
+      <button class="active" data-f="all">Alle</button>
+      <button data-f="wohnen">Wohnen</button>
+      <button data-f="pflege">Pflege &amp; Gesundheit</button>
+      <button data-f="buero">Büro &amp; Verwaltung</button>
+      <button data-f="gewerbe">Gewerbe &amp; Industrie</button>
+      <button data-f="bildung">Bildung &amp; Freizeit</button>
+      <button data-f="kultur">Kultur &amp; Öffentlichkeit</button>
+      <button data-f="sanierung">Sanierung &amp; Modernisierung</button>
+      <button data-f="wettbewerb">Wettbewerb &amp; Forschung</button>
+      <span class="sep"></span>
+      <span class="group-label">Ort</span>
+      <button data-f="berlin">Berlin</button>
+      <button data-f="deutschland">Deutschland</button>
+      <button data-f="international">International</button>
+      <span class="sep"></span>
+      <span class="group-label">Eingriff</span>
+      <button data-f="neubau">Neubau</button>
+      <button data-f="bestand">Bestand</button>
+      <button data-f="lowcost">Low-Cost</button>
+      <button data-f="energie">Energie / Ökologie</button>
+      <button data-f="barrierefrei">Barrierefreiheit</button>
+    </div>
+
+    <div class="project-grid" id="projects">
+
+      <article class="project-card span-7" data-tags="wohnen berlin neubau stadtreparatur">
+        <div class="img"><img src="assets/hero-pestalozzi.jpg" alt="Wohnungsbau Pestalozzistraße" /></div>
+        <div class="meta"><span>P-01 · Wohnen</span><span>Realisiert</span></div>
+        <h4>Pestalozzistraße 45–46</h4>
+        <p class="where">Berlin-Charlottenburg · Neubau Wohnungsbau</p>
+        <p class="desc">Stadtreparatur als Lückenschluss in einer Charlottenburger Blockstruktur — Wohnungsbau, der städtebaulichen Kontext, Wirtschaftlichkeit und technische Planungssicherheit zusammenführt.</p>
+        <div class="tags"><span>Wohnen</span><span>Berlin</span><span>Neubau</span><span>Stadtreparatur</span></div>
+      </article>
+
+      <article class="project-card span-5" data-tags="pflege berlin neubau barrierefrei">
+        <div class="img"><img src="assets/projekt-marzahn.jpg" alt="Service-Wohnen Marzahn" /></div>
+        <div class="meta"><span>P-02 · Pflege</span><span>Realisiert</span></div>
+        <h4>Service-Wohnen mit medizinischer Versorgung</h4>
+        <p class="where">Berlin-Marzahn · Pflege &amp; Gesundheit</p>
+        <p class="desc">Wohnen, Pflege und ambulante medizinische Versorgung an einem Ort — barrierefreie Grundrisse als ordnendes Werkzeug.</p>
+        <div class="tags"><span>Pflege</span><span>Berlin</span><span>Barrierefrei</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="wohnen berlin neubau">
+        <div class="img"><img src="assets/projekt-roelcke.jpg" alt="Wohnungsbau Roelckestraße" /></div>
+        <div class="meta"><span>P-03 · Wohnen</span><span>Realisiert</span></div>
+        <h4>Wohnungsbau Roelckestraße</h4>
+        <p class="where">Berlin-Pankow · Neubau</p>
+        <p class="desc">Wohnungsbau im Pankower Bestandsquartier — material- und kostenbewusst, im Dialog mit der Nachbarschaft.</p>
+        <div class="tags"><span>Wohnen</span><span>Berlin</span><span>Neubau</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="wohnen berlin bestand">
+        <div class="img"><img src="assets/projekt-wilhelmsruh.jpg" alt="Wohndachkuben Wilhelmsruher Damm" /></div>
+        <div class="meta"><span>P-04 · Wohnen</span><span>Bestand</span></div>
+        <h4>Wohndachkuben Wilhelmsruher Damm</h4>
+        <p class="where">Berlin-Reinickendorf · Aufstockung</p>
+        <p class="desc">Aufstockung im Bestand — neue Wohnungen als präzise Kuben auf einer großmaßstäblichen Wohnzeile.</p>
+        <div class="tags"><span>Wohnen</span><span>Berlin</span><span>Bestand</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="buero gewerbe deutschland neubau">
+        <div class="img"><img src="assets/projekt-genshagen.jpg" alt="Ausstellungshalle Genshagen" /></div>
+        <div class="meta"><span>P-05 · Verwaltung</span><span>Realisiert</span></div>
+        <h4>Ausstellungshalle und Verwaltungszentrum</h4>
+        <p class="where">Genshagen · Brandenburg</p>
+        <p class="desc">Verwaltung und Ausstellung als hybride Bauaufgabe — Halle, Büro und Repräsentation in einem Volumen.</p>
+        <div class="tags"><span>Büro</span><span>Deutschland</span><span>Neubau</span></div>
+      </article>
+
+      <article class="project-card span-6" data-tags="gewerbe buero berlin neubau">
+        <div class="img placeholder"><span>↳ Verwaltung · Labor · Industrie</span></div>
+        <div class="meta"><span>P-06 · Gewerbe</span><span>Realisiert</span></div>
+        <h4>Verwaltungs-, Labor- und Industriegebäude</h4>
+        <p class="where">Berlin · Schichauweg</p>
+        <p class="desc">Drei Programme unter einem Dach — Tragwerk, Haustechnik und Raumzuschnitt entlang industrieller Anforderungen.</p>
+        <div class="tags"><span>Gewerbe</span><span>Büro</span><span>Berlin</span></div>
+      </article>
+
+      <article class="project-card span-6" data-tags="pflege berlin bestand">
+        <div class="img placeholder"><span>↳ Privatklinik · Bestand</span></div>
+        <div class="meta"><span>P-07 · Pflege</span><span>Bestand</span></div>
+        <h4>Privatklinik Hundekehlestraße</h4>
+        <p class="where">Berlin-Grunewald · Sanierung</p>
+        <p class="desc">Sanierung und Umbau einer Privatklinik im Berliner Westen — medizinische Anforderungen im denkmalsensiblen Bestand.</p>
+        <div class="tags"><span>Pflege</span><span>Berlin</span><span>Bestand</span></div>
+      </article>
+
+      <article class="project-card span-6" data-tags="kultur deutschland wettbewerb">
+        <div class="img placeholder"><span>↳ Wettbewerb · Kunsthalle</span></div>
+        <div class="meta"><span>P-08 · Kultur</span><span>Wettbewerb</span></div>
+        <h4>Kunsthalle Bremen</h4>
+        <p class="where">Bremen · Wettbewerbsbeitrag</p>
+        <p class="desc">Wettbewerbsbeitrag für eine Kunsthalle — Lichtführung, Ausstellungslogistik und stadträumliche Adressbildung.</p>
+        <div class="tags"><span>Kultur</span><span>Deutschland</span><span>Wettbewerb</span></div>
+      </article>
+
+      <article class="project-card span-6" data-tags="kultur buero deutschland wettbewerb">
+        <div class="img placeholder"><span>↳ Rathaus · Verwaltung</span></div>
+        <div class="meta"><span>P-09 · Öffentlich</span><span>Wettbewerb</span></div>
+        <h4>Rathaus Korbach</h4>
+        <p class="where">Korbach · Verwaltungsbau</p>
+        <p class="desc">Öffentlicher Bau im historischen Stadtkern — Verwaltung als zugängliches, repräsentatives Gebäude.</p>
+        <div class="tags"><span>Öffentlich</span><span>Wettbewerb</span><span>Deutschland</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="bildung berlin bestand">
+        <div class="img placeholder"><span>↳ Umbau · Jugendhotel</span></div>
+        <div class="meta"><span>P-10 · Bildung</span><span>Bestand</span></div>
+        <h4>Umbau Gewerbehaus zu Jugendhotel</h4>
+        <p class="where">Friedrichstraße · Berlin-Mitte</p>
+        <p class="desc">Adaptive Wiederverwendung — ein Gewerbehaus wird zu einem Jugendhotel umgebaut.</p>
+        <div class="tags"><span>Bildung</span><span>Berlin</span><span>Bestand</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="sanierung wohnen berlin bestand">
+        <div class="img placeholder"><span>↳ Altbaumodernisierung</span></div>
+        <div class="meta"><span>P-11 · Sanierung</span><span>Bestand</span></div>
+        <h4>Altbaumodernisierung Waldowstraße / Herthaplatz</h4>
+        <p class="where">Berlin · Behutsame Stadterneuerung</p>
+        <p class="desc">Modernisierung im Bestand — Substanz erhalten, Wohnqualität, Energie und Erschließung sorgfältig erneuern.</p>
+        <div class="tags"><span>Sanierung</span><span>Wohnen</span><span>Bestand</span></div>
+      </article>
+
+      <article class="project-card span-4" data-tags="wohnen berlin bestand">
+        <div class="img placeholder"><span>↳ Remise · Hofbau</span></div>
+        <div class="meta"><span>P-12 · Wohnen</span><span>Bestand</span></div>
+        <h4>Remise Bizetstraße</h4>
+        <p class="where">Berlin · Hofgebäude</p>
+        <p class="desc">Eine Remise im Berliner Hof wird zu Wohnraum — kleinmaßstäblicher Eingriff im gewachsenen Quartier.</p>
+        <div class="tags"><span>Wohnen</span><span>Berlin</span><span>Bestand</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 04 KOMPETENZEN -->
+  <section id="kompetenzen" data-screen-label="05 Kompetenzen" class="container">
+    <div class="section-head">
+      <div class="num">04 — Kompetenzen</div>
+      <div>
+        <h2>Sechs Cluster — <em>typologisch breit, technisch tief.</em></h2>
+        <p class="kicker">Die Arbeit von AKP bündelt sich in sechs Kompetenzfeldern, die einander voraussetzen und in jeder Bauaufgabe gemeinsam wirken.</p>
+      </div>
+    </div>
+
+    <div class="competence-matrix">
+      <article>
+        <span class="n">K · 01</span>
+        <h4>Stadtreparatur und Bestand</h4>
+        <p>Lückenschluss, Aufstockung, Modernisierung — Bauen im gewachsenen Stadtraum.</p>
+        <div class="tags"><span>Stadt</span><span>Bestand</span><span>Lückenschluss</span></div>
+      </article>
+      <article>
+        <span class="n">K · 02</span>
+        <h4>Wirtschaftlichkeit</h4>
+        <p>Kosten, Förderung, Preis-Leistung — Wirtschaftlichkeit als Entwurfsfaktor von Anfang an.</p>
+        <div class="tags"><span>Kosten</span><span>Förderung</span><span>Low-Cost</span></div>
+      </article>
+      <article>
+        <span class="n">K · 03</span>
+        <h4>Energie und Ökologie</h4>
+        <p>Energieeffiziente Planung, Energieausweise, ökologisch geprüfte Materialwahl.</p>
+        <div class="tags"><span>Energie</span><span>Ökologie</span><span>Material</span></div>
+      </article>
+      <article>
+        <span class="n">K · 04</span>
+        <h4>Digitale und technische Kompetenz</h4>
+        <p>CAD- und Detailbibliothek, technische Planungssicherheit, durchgängige Werkplanung.</p>
+        <div class="tags"><span>CAD</span><span>Detail</span><span>Technik</span></div>
+      </article>
+      <article>
+        <span class="n">K · 05</span>
+        <h4>Generalplanung und Netzwerk</h4>
+        <p>Generalplanerische Verantwortung mit eingespieltem Netzwerk aus Fachplanern.</p>
+        <div class="tags"><span>Generalplanung</span><span>Netzwerk</span></div>
+      </article>
+      <article>
+        <span class="n">K · 06</span>
+        <h4>Typologische Breite</h4>
+        <p>Wohnen, Pflege, Verwaltung, Industrie, Bildung, Kultur — gelernt durch Wettbewerbe und Realisierungen.</p>
+        <div class="tags"><span>Wohnen</span><span>Pflege</span><span>Verwaltung</span><span>Industrie</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 05 GESCHICHTE -->
+  <section id="geschichte" data-screen-label="06 Geschichte" class="container">
+    <div class="section-head">
+      <div class="num">05 — Geschichte</div>
+      <div>
+        <h2>Seit 1991 — <em>Berlin und international.</em></h2>
+        <p class="kicker">Eine reduzierte Vita aus Studium, Auslandserfahrung, Wettbewerben und Veröffentlichungen.</p>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="t"><div class="y">1991</div><h4>Bürogründung</h4><p>AKP Architekten Kauschke + Partner gründet sich in Berlin.</p></div>
+      <div class="t"><div class="y">Studium</div><h4>Studienabschlüsse</h4><p>Architekturstudium und akademische Abschlüsse als Grundlage der Praxis.</p></div>
+      <div class="t"><div class="y">San Francisco</div><h4>CAD &amp; Detailbibliothek</h4><p>Aufbau einer digitalen Detailbibliothek während des Auslandsaufenthalts.</p></div>
+      <div class="t"><div class="y">USA · Kanada</div><h4>Internationale Erfahrung</h4><p>Praxis in Nordamerika prägt die technische und planerische Methodik.</p></div>
+      <div class="t"><div class="y">Japan · Europa</div><h4>Weitere Stationen</h4><p>Studien- und Arbeitsaufenthalte erweitern den typologischen Horizont.</p></div>
+      <div class="t"><div class="y">Wettbewerbe</div><h4>21 Beiträge</h4><p>Regelmäßige Teilnahme an offenen und geladenen Wettbewerben.</p></div>
+      <div class="t"><div class="y">Heute</div><h4>Generalplanung</h4><p>Generalplanung von Bauaufgaben in Berlin, Deutschland und international.</p></div>
+    </div>
+
+    <div class="kennzahlen">
+      <div><div class="num">21</div><div class="lbl">Wettbewerbe</div></div>
+      <div><div class="num"><em>2</em></div><div class="lbl">Erste Preise</div></div>
+      <div><div class="num">1</div><div class="lbl">Ankauf</div></div>
+      <div><div class="num">DEUBAU</div><div class="lbl">Preis-Nominierung</div></div>
+      <div><div class="num">20<em>+</em></div><div class="lbl">Veröffentlichungen</div></div>
+    </div>
+  </section>
+
+  <!-- 06 VERÖFFENTLICHUNGEN -->
+  <section id="pubs" data-screen-label="07 Veröffentlichungen" class="container pubs">
+    <div class="section-head">
+      <div class="num">06 — Veröffentlichungen</div>
+      <div>
+        <h2>Mehr als 20 Beiträge — <em>kuratiert nach Themenfeld.</em></h2>
+        <p class="kicker">Eine Auswahl aus über zwei Jahrzehnten Beiträgen zu eigenen Projekten, digitaler Planung, Ökologie, internationaler Architektur und Hochhaustypologie.</p>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Eigene<br/>Projekte</h3>
+      <ul>
+        <li><span>Veröffentlichungen zu realisierten und projektierten AKP-Bauten</span><span class="tag">Werkberichte</span></li>
+        <li><span>Stadtreparatur und Wohnungsbau in Berlin</span><span class="tag">Berlin</span></li>
+        <li><span>Wettbewerbsbeiträge in Fachpublikationen</span><span class="tag">Wettbewerb</span></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h3>Digitale<br/>Planung</h3>
+      <ul>
+        <li><span>CAD-Methodik und digitale Detailbibliothek</span><span class="tag">Methode</span></li>
+        <li><span>Werkplanung im digitalen Prozess</span><span class="tag">Werkplanung</span></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h3>Ökologie</h3>
+      <ul>
+        <li><span>Energieeffiziente Planung und Beratung</span><span class="tag">Energie</span></li>
+        <li><span>Ökologisch geprüfte Materialwahl</span><span class="tag">Material</span></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h3>Internationale<br/>Architektur</h3>
+      <ul>
+        <li><span>Beiträge mit Bezug auf USA, Kanada, Japan und Europa</span><span class="tag">International</span></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h3>Zukunft &amp;<br/>Hochhaus</h3>
+      <ul>
+        <li><span>Beiträge zur Hochhaustypologie und urbanen Zukunft</span><span class="tag">Hochhaus</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 07 NETZWERK -->
+  <section id="netzwerk" data-screen-label="08 Netzwerk" class="container netzwerk">
+    <div class="section-head">
+      <div class="num">07 — Netzwerk</div>
+      <div>
+        <h2>Generalplanung — <em>als Kompetenznetz.</em></h2>
+        <p class="kicker">Ein eingespieltes Fachnetzwerk wird projektbezogen aktiviert. Kategorien statt Telefonbuch.</p>
+      </div>
+    </div>
+
+    <div class="netz-grid">
+      <details><summary><span class="k">N · 01</span><span class="t">Wettbewerbspartner</span></summary><div class="body"><ul><li>Architekturpartner für offene und geladene Wettbewerbe</li><li>Interdisziplinäre Teamzusammenstellung</li></ul></div></details>
+      <details><summary><span class="k">N · 02</span><span class="t">Bauleitung</span></summary><div class="body"><ul><li>Externe Bauleitungen für Großprojekte</li><li>Qualitäts-, Kosten- und Terminkontrolle</li></ul></div></details>
+      <details><summary><span class="k">N · 03</span><span class="t">Tragwerksplanung</span></summary><div class="body"><ul><li>Tragwerk und Statik für Neubau und Bestand</li><li>Sondertragwerke für Industrie- und Hallenbau</li></ul></div></details>
+      <details><summary><span class="k">N · 04</span><span class="t">Technische Ausrüstung</span></summary><div class="body"><ul><li>HLS, Elektro, Gebäudeautomation</li><li>Integrale Planung im BIM-Prozess</li></ul></div></details>
+      <details><summary><span class="k">N · 05</span><span class="t">Brandschutz</span></summary><div class="body"><ul><li>Brandschutzkonzepte für komplexe Nutzungen</li><li>Sachverständige für Sonderbauten</li></ul></div></details>
+      <details><summary><span class="k">N · 06</span><span class="t">Vermessung</span></summary><div class="body"><ul><li>Bestandsaufnahme und Aufmaß</li><li>Lage- und Höhenpläne</li></ul></div></details>
+      <details><summary><span class="k">N · 07</span><span class="t">Garten- und Landschaftsplanung</span></summary><div class="body"><ul><li>Freianlagen, Höfe, Quartiersgrün</li><li>Klimaangepasste Bepflanzung</li></ul></div></details>
+      <details><summary><span class="k">N · 08</span><span class="t">Energieberatung</span></summary><div class="body"><ul><li>Energiekonzepte und Energieausweise</li><li>Förderfähige Sanierungspfade</li></ul></div></details>
+    </div>
+  </section>
+
+  <!-- 08 KONTAKT -->
+  <section id="kontakt" data-screen-label="09 Kontakt" class="container kontakt">
+    <div class="section-head">
+      <div class="num">08 — Kontakt</div>
+      <div>
+        <h2>Bauaufgabe besprechen. <em>Persönlich, in Berlin.</em></h2>
+        <p class="kicker">Schreiben oder rufen Sie an — oder skizzieren Sie Ihr Vorhaben über das Formular.</p>
+      </div>
+    </div>
+
+    <div class="kontakt-grid">
+      <aside class="info">
+        <div class="address">
+          AKP Architekten<br/>
+          Kauschke + Partner<br/>
+          Hohenzollerndamm 12<br/>
+          10717 Berlin-Wilmersdorf
+        </div>
+        <dl>
+          <dt>Telefon</dt><dd><a href="tel:+493086220-51">+49 (0)30 862 20-51</a></dd>
+          <dt>Telefax</dt><dd>+49 (0)30 862 20-60</dd>
+          <dt>E-Mail</dt><dd><a href="mailto:info@architekten-kauschke.de">info@architekten-kauschke.de</a></dd>
+          <dt>Internet</dt><dd><a href="https://www.architekten-kauschke.de" target="_blank" rel="noopener">www.architekten-kauschke.de</a></dd>
+        </dl>
+      </aside>
+
+      <form data-cta="anfrage" novalidate>
+        <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" required /></div>
+        <div class="field"><label for="f-mail">E-Mail</label><input id="f-mail" name="mail" type="email" required /></div>
+        <div class="field"><label for="f-tel">Telefon · optional</label><input id="f-tel" name="tel" type="tel" /></div>
+        <div class="field"><label for="f-typ">Projekttyp</label>
+          <select id="f-typ" name="typ">
+            <option value="">— bitte wählen —</option>
+            <option>Wohnungsbau</option>
+            <option>Pflege &amp; Gesundheit</option>
+            <option>Büro &amp; Verwaltung</option>
+            <option>Gewerbe &amp; Industrie</option>
+            <option>Bildung &amp; Freizeit</option>
+            <option>Kultur &amp; Öffentlichkeit</option>
+            <option>Sanierung &amp; Modernisierung</option>
+            <option>Wettbewerb &amp; Forschung</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-ort">Ort des Projekts</label><input id="f-ort" name="ort" type="text" /></div>
+        <div class="field"><label for="f-lp">Leistungsphase / Anliegen</label>
+          <select id="f-lp" name="lp">
+            <option value="">— bitte wählen —</option>
+            <option>Grundstücks- und Machbarkeitsanalyse</option>
+            <option>Entwurf</option>
+            <option>Genehmigungsplanung</option>
+            <option>Ausführungsplanung</option>
+            <option>Ausschreibung &amp; Vergabe</option>
+            <option>Bauleitung</option>
+            <option>Sanierung / Modernisierung</option>
+            <option>Energieberatung / Energieausweis</option>
+            <option>Generalplanung</option>
+          </select>
+        </div>
+        <div class="field full"><label for="f-budget">Budgetrahmen · optional</label><input id="f-budget" name="budget" type="text" placeholder="z. B. 1,2 – 2,4 Mio. EUR" /></div>
+        <div class="field full"><label for="f-msg">Nachricht</label><textarea id="f-msg" name="msg" rows="5" placeholder="Beschreiben Sie kurz die Bauaufgabe, den Ort und den Zeithorizont."></textarea></div>
+        <div class="file">
+          <span>Datei-Upload · optional (Plan, Skizze, Foto)</span>
+          <button type="button">Datei wählen</button>
+        </div>
+        <!-- TODO: Datenschutztext rechtlich prüfen und ergänzen. -->
+        <label class="privacy">
+          <input type="checkbox" required />
+          <span>Datenschutzbestätigung — Platzhalter. Der Datenschutztext wird vor Veröffentlichung rechtlich geprüft und ergänzt.</span>
+        </label>
+        <div class="submit"><button type="submit" data-cta="anfrage">Anfrage senden →</button></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="brand-foot">
+    AKP Architekten Kauschke + Partner
+    <small>Berlin · seit 1991 · Architektur und Generalplanung</small>
+  </div>
+  <div class="colofon">© AKP · Hohenzollerndamm 12 · 10717 Berlin</div>
+</footer>
+
+<script>
+(function(){
+  // ---------- HERO Z-AXIS SCROLL ----------
+  const stage   = document.querySelector('.intro-scroll-stage');
+  const scene   = document.querySelector('.hero-scene');
+  const root    = document.documentElement;
+  const reduce  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  function update(){
+    if(reduce){ root.style.setProperty('--scroll-progress', 0); return; }
+    const r = stage.getBoundingClientRect();
+    // progress: 0 when stage top is at viewport top; 1 when stage has scrolled (height - vh)
+    const total = stage.offsetHeight - window.innerHeight;
+    const scrolled = clamp(-r.top, 0, total);
+    const p = total > 0 ? scrolled / total : 0;
+    // ease for hero plane (slightly fast at first, slow at end)
+    const ep = p < .5 ? 2*p*p : 1 - Math.pow(-2*p+2,2)/2;
+
+    const scale = lerp(1, 0.72, ep);
+    const tz    = lerp(0, -420, ep);
+    const rx    = lerp(0, 58, ep);
+    const opa   = lerp(1, 0.08, ep);
+
+    scene.style.setProperty('--scroll-progress', p.toFixed(4));
+    scene.style.setProperty('--hero-scale', scale.toFixed(4));
+    scene.style.setProperty('--hero-tz', tz.toFixed(2)+'px');
+    scene.style.setProperty('--hero-rx', rx.toFixed(2)+'deg');
+    scene.style.setProperty('--hero-opacity', opa.toFixed(4));
+
+    // content layer: opacity 0->1, tz -500 -> 0, scale .92 -> 1, but mostly in second half
+    const cp = clamp((p - .35) / .55, 0, 1);
+    const ce = cp < .5 ? 2*cp*cp : 1 - Math.pow(-2*cp+2,2)/2;
+    scene.style.setProperty('--content-opacity', ce.toFixed(4));
+    scene.style.setProperty('--content-tz', lerp(-500, 0, ce).toFixed(2)+'px');
+    scene.style.setProperty('--content-scale', lerp(0.92, 1, ce).toFixed(4));
+    scene.style.setProperty('--content-pointer', ce > .8 ? 'auto' : 'none');
+
+    // page progress rail
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const pg = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+    root.style.setProperty('--page-progress', pg.toFixed(2)+'%');
+  }
+
+  let raf = 0;
+  function tick(){ raf = 0; update(); }
+  function onScroll(){ if(!raf) raf = requestAnimationFrame(tick); }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
+
+  // ---------- PROJECT FILTERS ----------
+  const filters = document.getElementById('filters');
+  const projects = document.getElementById('projects');
+  if(filters && projects){
+    filters.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-f]');
+      if(!btn) return;
+      [...filters.querySelectorAll('button')].forEach(b => b.classList.toggle('active', b===btn));
+      const f = btn.dataset.f;
+      [...projects.children].forEach(card => {
+        const tags = (card.dataset.tags||'').split(' ');
+        const show = f === 'all' || tags.includes(f);
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  }
+
+  // ---------- CUSTOM CURSOR ----------
+  const cursor = document.getElementById('cursor');
+  let cx = 0, cy = 0, tx = 0, ty = 0;
+  function moveCursor(e){
+    tx = e.clientX; ty = e.clientY;
+    cursor.classList.add('visible');
+  }
+  function loop(){
+    cx = lerp(cx, tx, 0.22);
+    cy = lerp(cy, ty, 0.22);
+    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  }
+  if(matchMedia('(hover:hover)').matches){
+    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mouseleave', ()=> cursor.classList.remove('visible'));
+    loop();
+    document.querySelectorAll('.project-card').forEach(el => {
+      el.addEventListener('mouseenter', ()=> cursor.classList.add('hover-project'));
+      el.addEventListener('mouseleave', ()=> cursor.classList.remove('hover-project'));
+    });
+    document.querySelectorAll('[data-cta]').forEach(el => {
+      el.addEventListener('mouseenter', ()=> cursor.classList.add('hover-cta'));
+      el.addEventListener('mouseleave', ()=> cursor.classList.remove('hover-cta'));
+    });
+  } else {
+    cursor.style.display = 'none';
+  }
+
+  // ---------- SCROLL REVEAL ----------
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        en.target.style.opacity = 1;
+        en.target.style.transform = 'translateY(0)';
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold: 0.08});
+  document.querySelectorAll('main section .project-card, main section .competence-matrix article, main section .timeline .t, main section .pubs .group, main section .netz-grid details').forEach(el=>{
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity .7s ease, transform .7s ease';
+    io.observe(el);
+  });
+
+  // ---------- FORM ----------
+  document.querySelector('form')?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const btn = e.target.querySelector('[type="submit"]');
+    btn.textContent = 'Danke — Anfrage erfasst ✓';
+    btn.style.background = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.color = 'var(--paper)';
+  });
+})();
+</script>
+</body>
+</html>
