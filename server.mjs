@@ -99,13 +99,27 @@ const server = createServer(async (req, res) => {
       'X-Content-Type-Options': 'nosniff'
     };
 
-    res.writeHead(200, headers);
     if (req.method === 'HEAD') {
+      res.writeHead(200, headers);
       res.end();
       return;
     }
 
-    createReadStream(fullPath).pipe(res);
+    const fileStream = createReadStream(fullPath);
+
+    fileStream.once('open', () => {
+      res.writeHead(200, headers);
+      fileStream.pipe(res);
+    });
+
+    fileStream.once('error', () => {
+      if (!res.headersSent) {
+        send(res, 404, 'Not Found', { 'Content-Type': 'text/plain; charset=utf-8' });
+        return;
+      }
+
+      res.destroy();
+    });
   } catch {
     send(res, 404, 'Not Found', { 'Content-Type': 'text/plain; charset=utf-8' });
   }
